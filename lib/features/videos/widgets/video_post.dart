@@ -54,10 +54,6 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuration,
     );
-    _animationController.addListener(() {
-      //_animationController의 값이 변할 때마다 setstate를 통해 build를 호출하고 변한 값으로 화면에 보여준다!
-      setState(() {});
-    });
   }
 
   @override
@@ -112,17 +108,22 @@ class _VideoPostState extends State<VideoPost>
             child: IgnorePointer(
               //클릭 무시
               child: Center(
-                child: Transform.scale(
-                  scale: _animationController.value,
-                  child: AnimatedOpacity(
-                    opacity: _isPaused ? 1 : 0,
-                    duration: _animationDuration,
-                    child: const FaIcon(
-                      FontAwesomeIcons.play,
-                      color: Colors.white,
-                      size: Sizes.size52,
-                    ),
-                  ),
+                child: AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _animationController.value,
+                      child: AnimatedOpacity(
+                        opacity: _isPaused ? 1 : 0,
+                        duration: _animationDuration,
+                        child: const FaIcon(
+                          FontAwesomeIcons.play,
+                          color: Colors.white,
+                          size: Sizes.size52,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
