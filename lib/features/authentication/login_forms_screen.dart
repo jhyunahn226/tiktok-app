@@ -20,9 +20,12 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         //각 TextFormField의 validate를 모두 통과하면
         _formKey.currentState!.save(); //각 TextFormField의 onSaved를 호출
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const InterestsScreen(),
-        ));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const InterestsScreen(),
+          ),
+          (route) => false,
+        );
       }
     }
   }
