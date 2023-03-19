@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/widgets/video_button.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -20,8 +22,7 @@ class VideoPost extends StatefulWidget {
 
 class _VideoPostState extends State<VideoPost>
     with SingleTickerProviderStateMixin {
-  final VideoPlayerController _videoPlayerController =
-      VideoPlayerController.asset('assets/videos/video.mp4');
+  late final VideoPlayerController _videoPlayerController;
 
   bool _isPaused = false;
   final Duration _animationDuration = const Duration(milliseconds: 200);
@@ -37,10 +38,12 @@ class _VideoPostState extends State<VideoPost>
   }
 
   void _initVideoPlayer() async {
+    _videoPlayerController =
+        VideoPlayerController.asset('assets/videos/video.mp4');
     await _videoPlayerController.initialize();
-    // _videoPlayerController.play();
-    setState(() {});
+    await _videoPlayerController.setLooping(true);
     _videoPlayerController.addListener(_onVideoChange);
+    setState(() {});
   }
 
   @override
@@ -126,6 +129,62 @@ class _VideoPostState extends State<VideoPost>
                   },
                 ),
               ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  '@jhyun_beem',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: Sizes.size16,
+                  ),
+                ),
+                Gaps.v10,
+                Text(
+                  '모여서 각자 BEEM! Join Us!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: Sizes.size14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: Column(
+              children: const [
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  foregroundImage: NetworkImage(
+                      "https://avatars.githubusercontent.com/u/23349047?v=4"),
+                  child: Text('JH'),
+                ),
+                Gaps.v24,
+                VideoButton(
+                  icon: FontAwesomeIcons.solidHeart,
+                  text: '2.9M',
+                ),
+                Gaps.v24,
+                VideoButton(
+                  icon: FontAwesomeIcons.solidComment,
+                  text: '33k',
+                ),
+                Gaps.v24,
+                VideoButton(
+                  icon: FontAwesomeIcons.share,
+                  text: 'Share',
+                ),
+              ],
             ),
           ),
         ],

@@ -28,6 +28,8 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   }
 
   void _onVideoFinished() {
+    return;
+    //아래와 같이 하면, 영상이 끝나면 다음 영상으로 넘어갈 수 있음
     _pageController.nextPage(
       duration: _scrollDurationn,
       curve: _scrollCurve,
