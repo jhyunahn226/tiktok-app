@@ -101,8 +101,10 @@ class _VideoPostState extends State<VideoPost>
       context: context,
       builder: (context) => const VideoComments(),
       shape: RoundedRectangleBorder(
+        //이렇게 해야 borderradius를 줄 수 있음
         borderRadius: BorderRadius.circular(Sizes.size16),
       ),
+      isScrollControlled: true, //bottomsheet안에 ListView를 넣을거라면 true로 해야함
     );
     _onTogglePause(); //다시재생
   }
