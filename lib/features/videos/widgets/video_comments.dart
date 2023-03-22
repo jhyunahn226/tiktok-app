@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 
 class VideoComments extends StatefulWidget {
@@ -36,10 +37,73 @@ class _VideoCommentsState extends State<VideoComments> {
             ),
           ],
         ),
-        body: ListView.builder(
+        body: ListView.separated(
+          padding: const EdgeInsets.symmetric(
+            vertical: Sizes.size10,
+            horizontal: Sizes.size16,
+          ),
           itemCount: 10,
-          itemBuilder: (context, index) => Container(
-            child: const Text('im a comment'),
+          itemBuilder: (context, index) => Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const CircleAvatar(
+                radius: 18,
+                foregroundImage: NetworkImage(
+                    "https://avatars.githubusercontent.com/u/23349047?v=4"),
+                child: Text('JH'),
+              ),
+              Gaps.h10,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'JHyun',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Sizes.size14,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                    Gaps.v3,
+                    const Text(
+                      "Please join us!! Contact me anytime through DM or Email.",
+                    ),
+                  ],
+                ),
+              ),
+              Gaps.h10,
+              Column(
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.heart,
+                    size: Sizes.size20,
+                    color: Colors.grey.shade500,
+                  ),
+                  Gaps.v2,
+                  Text(
+                    '52.2k',
+                    style: TextStyle(
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          separatorBuilder: (context, index) => Gaps.v20,
+        ),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
+          child: Row(
+            children: const [
+              CircleAvatar(
+                radius: 18,
+                foregroundImage: NetworkImage(
+                    "https://avatars.githubusercontent.com/u/23349047?v=4"),
+                child: Text('JH'),
+              )
+            ],
           ),
         ),
       ),
