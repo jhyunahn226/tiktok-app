@@ -22,7 +22,10 @@ class TikTokApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TikTok',
       themeMode: ThemeMode.system,
+      // FlexColorScheme 패키지를 활용하면 ThemeData에 편하게 활용할 수 있음!
+      // https://pub.dev/packages/flex_color_scheme
       theme: ThemeData(
+        useMaterial3: true,
         primaryColor: const Color(0xFFE9435A),
         scaffoldBackgroundColor: Colors.white,
         brightness: Brightness.light,
@@ -35,10 +38,11 @@ class TikTokApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           foregroundColor: Colors.black,
           backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
           elevation: 0,
           titleTextStyle: TextStyle(
             color: Colors.black,
-            fontSize: Sizes.size16 + Sizes.size2,
+            fontSize: Sizes.size18,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -55,6 +59,7 @@ class TikTokApp extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
+        useMaterial3: true,
         primaryColor: const Color(0xFFE9435A),
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.black,
@@ -64,13 +69,22 @@ class TikTokApp extends StatelessWidget {
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.grey.shade900,
+          surfaceTintColor: Colors.grey.shade900,
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: Sizes.size18,
+            fontWeight: FontWeight.w600,
+          ),
+          actionsIconTheme: IconThemeData(
+            color: Colors.grey.shade100,
+          ),
         ),
         bottomAppBarTheme: BottomAppBarTheme(
           color: Colors.grey.shade900,
         ),
         tabBarTheme: TabBarTheme(
           labelColor: Colors.white,
-          unselectedLabelColor: Colors.grey.shade500,
+          unselectedLabelColor: Colors.grey.shade700,
           indicatorColor: Colors.white,
         ),
         listTileTheme: const ListTileThemeData(

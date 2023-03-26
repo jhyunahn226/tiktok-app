@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/utils.dart';
 
 class ChatDetailScreen extends StatefulWidget {
   const ChatDetailScreen({super.key});
@@ -26,6 +27,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = isDarkMode(context);
+
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
@@ -130,11 +133,13 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             Positioned(
               bottom: 0,
               width: MediaQuery.of(context).size.width,
-              child: BottomAppBar(
-                color: Colors.grey.shade50,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Sizes.size14,
-                  vertical: Sizes.size6,
+              child: Container(
+                color: isDark ? Colors.grey.shade900 : Colors.grey.shade50,
+                padding: const EdgeInsets.only(
+                  left: Sizes.size14,
+                  right: Sizes.size14,
+                  top: Sizes.size6,
+                  bottom: Sizes.size28,
                 ),
                 child: Row(
                   children: [
