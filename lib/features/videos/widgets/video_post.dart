@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
@@ -12,10 +13,10 @@ class VideoPost extends StatefulWidget {
   final int index;
 
   const VideoPost({
-    super.key,
+    Key? key,
     required this.onVideoFinished,
     required this.index,
-  });
+  }) : super(key: key);
 
   @override
   State<VideoPost> createState() => _VideoPostState();
@@ -23,7 +24,7 @@ class VideoPost extends StatefulWidget {
 
 class _VideoPostState extends State<VideoPost>
     with SingleTickerProviderStateMixin {
-  late final VideoPlayerController _videoPlayerController;
+  late VideoPlayerController _videoPlayerController;
 
   bool _isPaused = false;
   final Duration _animationDuration = const Duration(milliseconds: 200);
@@ -43,6 +44,9 @@ class _VideoPostState extends State<VideoPost>
         VideoPlayerController.asset('assets/videos/video.mp4');
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true);
+    if (kIsWeb) {
+      await _videoPlayerController.setVolume(0);
+    }
     _videoPlayerController.addListener(_onVideoChange);
     setState(() {});
   }
