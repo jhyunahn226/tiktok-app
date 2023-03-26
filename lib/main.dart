@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok/features/authentication/sign_up_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,9 +21,11 @@ class TikTokApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'TikTok',
+      themeMode: ThemeMode.system,
       theme: ThemeData(
         primaryColor: const Color(0xFFE9435A),
         scaffoldBackgroundColor: Colors.white,
+        brightness: Brightness.light,
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color(0xFFE9435A),
         ),
@@ -39,8 +41,19 @@ class TikTokApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: Colors.grey.shade50,
+        ),
       ),
-      home: const MainNavigationScreen(),
+      darkTheme: ThemeData(
+        primaryColor: const Color(0xFFE9435A),
+        scaffoldBackgroundColor: Colors.black,
+        brightness: Brightness.dark,
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: Colors.grey.shade800,
+        ),
+      ),
+      home: const SignUpScreen(),
     );
   }
 }
