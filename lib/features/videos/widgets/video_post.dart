@@ -45,7 +45,7 @@ class _VideoPostState extends State<VideoPost>
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true);
     if (kIsWeb) {
-      await _videoPlayerController.setVolume(0);
+      await _videoPlayerController.setVolume(0); //웹에서는 볼륨이 0이어야 autoplay를 지원함
     }
     _videoPlayerController.addListener(_onVideoChange);
     setState(() {});
