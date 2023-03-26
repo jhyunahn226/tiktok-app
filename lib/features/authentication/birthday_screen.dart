@@ -48,7 +48,6 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           "Sign up",
@@ -68,11 +67,13 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
               ),
             ),
             Gaps.v8,
-            const Text(
-              "Your birthday won't be shown publicly.",
-              style: TextStyle(
-                fontSize: Sizes.size16,
-                color: Colors.black54,
+            const Opacity(
+              opacity: 0.7,
+              child: Text(
+                "Your birthday won't be shown publicly.",
+                style: TextStyle(
+                  fontSize: Sizes.size16,
+                ),
               ),
             ),
             Gaps.v16,
