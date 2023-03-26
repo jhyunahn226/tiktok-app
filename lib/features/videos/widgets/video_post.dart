@@ -68,6 +68,7 @@ class _VideoPostState extends State<VideoPost>
 
   void _onVisibilityChanged(VisibilityInfo info) {
     // print('Video #${widget.index} is ${info.visibleFraction * 100}% visible');
+    if (!mounted) return; //Widget트리에서 제거된 상태라면 아무것도 안함
     if (info.visibleFraction == 1 && //VisibilityDetector위젯이 100% 보는 상태가 되면
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
