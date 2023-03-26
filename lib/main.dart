@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok/features/authentication/sign_up_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp]); //디바이스 방향 - 정방향만 지원
+
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.dark); //상태바 아이콘 색상 변경
   runApp(const TikTokApp());
 }
 
@@ -12,6 +19,7 @@ class TikTokApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'TikTok',
       theme: ThemeData(
         primaryColor: const Color(0xFFE9435A),
@@ -32,7 +40,7 @@ class TikTokApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainNavigationScreen(),
+      home: const SignUpScreen(),
     );
   }
 }
