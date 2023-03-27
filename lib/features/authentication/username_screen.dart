@@ -13,6 +13,7 @@ class UsernameScreen extends StatefulWidget {
 }
 
 class _UsernameScreenState extends State<UsernameScreen> {
+  static String routeName = "/username";
   final TextEditingController _usernameController = TextEditingController();
 
   String _username = '';
