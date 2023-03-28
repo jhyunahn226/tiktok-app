@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/video_preview_screen.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
   const VideoRecordingScreen({super.key});
@@ -36,22 +37,6 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     upperBound: 1.0,
   );
 
-  @override
-  void initState() {
-    super.initState();
-    initPermissions();
-    _progressAnimationController.addListener(() {
-      //애니메이션 값의 모든 변화가 생길때마다 호출될 함수
-      setState(() {});
-    });
-    _progressAnimationController.addStatusListener((status) {
-      //애니메이션의 상태가 변할때마다 호출될 함수(끝났을 때 등)
-      if (status == AnimationStatus.completed) {
-        _stopRecording();
-      }
-    });
-  }
-
   Future<void> initPermissions() async {
     final camaeraPermission = await Permission.camera.request();
     final micPermission = await Permission.microphone.request();
@@ -79,8 +64,11 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     _cameraController = CameraController(
       cameras[_isSelfieMode ? 1 : 0],
       ResolutionPreset.ultraHigh,
+      enableAudio: false, //에뮬레이터에서는 음소거로 녹화해야 정상동작함(버그)
     );
     await _cameraController.initialize();
+    await _cameraController.prepareForVideoRecording();
+
     _flashMode = _cameraController.value.flashMode;
   }
 
@@ -96,14 +84,48 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     setState(() {});
   }
 
-  void _startRecording() {
+  Future<void> _startRecording() async {
+    if (_cameraController.value.isRecordingVideo) return;
     _buttonAnimationController.forward();
     _progressAnimationController.forward();
+    await _cameraController.startVideoRecording();
   }
 
-  void _stopRecording() {
+  Future<void> _stopRecording() async {
+    if (!_cameraController.value.isRecordingVideo) return;
     _buttonAnimationController.reverse();
     _progressAnimationController.reset();
+    final video = await _cameraController.stopVideoRecording();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoPreviewScreen(video: video),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initPermissions();
+    _progressAnimationController.addListener(() {
+      //애니메이션 값의 모든 변화가 생길때마다 호출될 함수
+      setState(() {});
+    });
+    _progressAnimationController.addStatusListener((status) {
+      //애니메이션의 상태가 변할때마다 호출될 함수(끝났을 때 등)
+      if (status == AnimationStatus.completed) {
+        _stopRecording();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _buttonAnimationController.dispose();
+    _progressAnimationController.dispose();
+    _cameraController.dispose();
+    super.dispose();
   }
 
   @override
