@@ -47,6 +47,10 @@ class SignUpScreen extends StatelessWidget {
     context.push(UsernameScreen.routeName);
   }
 
+  void _onAppleTap(BuildContext context) {
+    context.push("/users/jhyun?show=likes");
+  }
+
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
@@ -88,9 +92,12 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ),
                     Gaps.v16,
-                    const AuthButton(
-                      icon: FaIcon(FontAwesomeIcons.apple),
-                      text: "Continue with Apple",
+                    GestureDetector(
+                      onTap: () => _onAppleTap(context),
+                      child: const AuthButton(
+                        icon: FaIcon(FontAwesomeIcons.apple),
+                        text: "Continue with Apple",
+                      ),
                     ),
                   ],
                   if (orientation == Orientation.landscape)

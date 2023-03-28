@@ -6,9 +6,10 @@ import 'package:tiktok/features/settings/settings_screen.dart';
 import 'package:tiktok/features/users/widgets/persistent_tabbar.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  final String username;
+  final String username, tab;
 
-  const UserProfileScreen({super.key, required this.username});
+  const UserProfileScreen(
+      {super.key, required this.username, required this.tab});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -26,6 +27,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       body: SafeArea(
         child: DefaultTabController(
+          initialIndex: widget.tab == "likes" ? 1 : 0,
           length: 2,
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) {
