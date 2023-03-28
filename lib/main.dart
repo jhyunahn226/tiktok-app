@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/authentication/email_screen.dart';
-import 'package:tiktok/features/authentication/login_screen.dart';
-import 'package:tiktok/features/authentication/sign_up_screen.dart';
-import 'package:tiktok/features/authentication/username_screen.dart';
+import 'package:tiktok/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +18,8 @@ class TikTokApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
       title: 'TikTok',
       themeMode: ThemeMode.system,
@@ -94,14 +92,6 @@ class TikTokApp extends StatelessWidget {
           iconColor: Colors.white,
         ),
       ),
-      initialRoute: "/",
-      routes: {
-        SignUpScreen.routeName: (context) =>
-            const SignUpScreen(), //SignUpScreen에 static변수로 routeName이 정의되어있음
-        "/username": (context) => const UsernameScreen(),
-        LoginScreen.routeName: (context) => const LoginScreen(),
-        EmailScreen.routeName: (context) => const EmailScreen(),
-      },
     );
   }
 }

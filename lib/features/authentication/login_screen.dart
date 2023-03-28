@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/login_forms_screen.dart';
@@ -11,7 +12,7 @@ class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   void _onSignupTap(BuildContext context) {
-    Navigator.of(context).pop("Hello!");
+    context.pop();
   }
 
   void _onEmailLoginTap(BuildContext context) {

@@ -6,6 +6,7 @@ import 'package:tiktok/features/authentication/email_screen.dart';
 import 'widgets/form_button.dart';
 
 class UsernameScreen extends StatefulWidget {
+  static String routeName = "/username";
   const UsernameScreen({super.key});
 
   @override
@@ -13,7 +14,6 @@ class UsernameScreen extends StatefulWidget {
 }
 
 class _UsernameScreenState extends State<UsernameScreen> {
-  static String routeName = "/username";
   final TextEditingController _usernameController = TextEditingController();
 
   String _username = '';
