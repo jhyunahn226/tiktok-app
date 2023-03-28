@@ -6,7 +6,9 @@ import 'package:tiktok/features/settings/settings_screen.dart';
 import 'package:tiktok/features/users/widgets/persistent_tabbar.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({super.key});
+  final String username;
+
+  const UserProfileScreen({super.key, required this.username});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -29,7 +31,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             headerSliverBuilder: (context, innerBoxIsScrolled) {
               return [
                 SliverAppBar(
-                  title: const Text('JHyun Ahn'),
+                  title: Text(widget.username),
                   actions: [
                     IconButton(
                       onPressed: _onGearPressed,
