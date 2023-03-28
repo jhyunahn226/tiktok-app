@@ -15,8 +15,9 @@ class VideoRecordingScreen extends StatefulWidget {
 }
 
 class _VideoRecordingScreenState extends State<VideoRecordingScreen>
-    with TickerProviderStateMixin {
-  //두개 이상의 animationController가 있으면 SingleTickerProviderStateMixin 못씀
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+  // 두개 이상의 animationController가 있으면 SingleTickerProviderStateMixin 못씀
+  // didChangeAppLifecycleState를 오버라이드하려면 WidgetsBindingObserver를 상속해야함
   bool? _hasPermission;
   bool _isSelfieMode = false;
   late FlashMode _flashMode;
@@ -72,6 +73,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     await _cameraController.prepareForVideoRecording();
 
     _flashMode = _cameraController.value.flashMode;
+    setState(() {});
   }
 
   Future<void> _toggleSelphieMode() async {
@@ -132,6 +134,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   void initState() {
     super.initState();
     initPermissions();
+    WidgetsBinding.instance
+        .addObserver(this); //didChangeAppLifecycleState을 호출하기 위해 앱에 옵저버 추가
     _progressAnimationController.addListener(() {
       //애니메이션 값의 모든 변화가 생길때마다 호출될 함수
       setState(() {});
@@ -150,6 +154,24 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     _progressAnimationController.dispose();
     _cameraController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    //유저가 앱에서 나가면 호출됨 -> state는 AppLifecycleState.inactive & paused
+    //유저가 앱으로 돌아오면 호출됨 -> state는 AppLifecycleState.resumed
+
+    //권한요청창을 띄우면, 앱을 나가는 것으로 인식함
+    //따라서 아래의 코드가 없다면,
+    //앱을 처음 실행하자마자 권한요청창이 뜨고, (state == AppLifecycleState.inactive)
+    //_cameraController.dispose()를 하려고 하겠지만 _cameraController는 아직 정의되지 않은 상태라서 에러 발생함
+    if (!_cameraController.value.isInitialized) return;
+
+    if (state == AppLifecycleState.inactive) {
+      _cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      initCamera();
+    }
   }
 
   @override
