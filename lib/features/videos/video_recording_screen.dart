@@ -13,8 +13,15 @@ class VideoRecordingScreen extends StatefulWidget {
 
 class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   bool? _hasPermission;
+  bool _isSelfieMode = false;
 
-  late final CameraController _cameraController;
+  late CameraController _cameraController;
+
+  @override
+  void initState() {
+    super.initState();
+    initPermissions();
+  }
 
   Future<void> initPermissions() async {
     final camaeraPermission = await Permission.camera.request();
@@ -40,15 +47,17 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
 
     if (cameras.isEmpty) return;
 
-    _cameraController =
-        CameraController(cameras[0], ResolutionPreset.ultraHigh);
+    _cameraController = CameraController(
+      cameras[_isSelfieMode ? 1 : 0],
+      ResolutionPreset.ultraHigh,
+    );
     await _cameraController.initialize();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    initPermissions();
+  Future<void> _toggleSelphieMode() async {
+    _isSelfieMode = !_isSelfieMode;
+    await initCamera();
+    setState(() {});
   }
 
   @override
@@ -64,7 +73,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     Text(
-                      "Initializig...",
+                      "Initializing...",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: Sizes.size20,
@@ -94,6 +103,15 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                           children: [
                             CameraPreview(
                               _cameraController,
+                            ),
+                            Positioned(
+                              top: Sizes.size20,
+                              left: Sizes.size20,
+                              child: IconButton(
+                                color: Colors.white,
+                                onPressed: _toggleSelphieMode,
+                                icon: const Icon(Icons.cameraswitch),
+                              ),
                             ),
                           ],
                         )
