@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/email_screen.dart';
@@ -7,8 +6,6 @@ import 'package:tiktok/features/authentication/email_screen.dart';
 import 'widgets/form_button.dart';
 
 class UsernameScreen extends StatefulWidget {
-  static String routeURL = "username";
-  static String routeName = "username";
   const UsernameScreen({super.key});
 
   @override
@@ -39,8 +36,12 @@ class _UsernameScreenState extends State<UsernameScreen> {
   void _onNextTap() {
     //StatefulWidget 내에서는 context를 전역적으로 사용할 수 있으므로, 파라미터로 받지 않아도 됨!
     if (_username.isEmpty) return;
-    context.pushNamed(EmailScreen.routeName,
-        extra: EmailScreenArgs(username: _username));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EmailScreen(username: _username),
+      ),
+    );
   }
 
   @override

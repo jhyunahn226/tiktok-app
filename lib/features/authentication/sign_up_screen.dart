@@ -9,47 +9,22 @@ import 'package:tiktok/features/authentication/widgets/auth_button.dart';
 import 'package:tiktok/utils.dart';
 
 class SignUpScreen extends StatelessWidget {
-  static String routeURL = "/";
-  static const routeName = "signUp";
+  static const String routeName = "signup";
+  static const String routeURL = "/";
+
   const SignUpScreen({super.key});
 
   void _onLoginTap(BuildContext context) async {
-    context.push(LoginScreen.routeName);
+    context.pushNamed(LoginScreen.routeName);
   }
 
   void _onEmailTap(BuildContext context) {
-    /* Navigator.of(context).push(
-      PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const UsernameScreen(),
-          transitionDuration: const Duration(milliseconds: 500),
-          reverseTransitionDuration: const Duration(milliseconds: 500),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final offsetAnimation = Tween(
-              begin: const Offset(0, -1),
-              end: Offset.zero,
-            ).animate(animation);
-
-            final opacityAnimation = Tween(
-              begin: 0.5,
-              end: 1.0,
-            ).animate(animation);
-
-            return SlideTransition(
-              position: offsetAnimation,
-              child: FadeTransition(
-                opacity: opacityAnimation,
-                child: child,
-              ),
-            );
-          }),
-    ); */
-
-    context.pushNamed(UsernameScreen.routeName);
-  }
-
-  void _onAppleTap(BuildContext context) {
-    context.push("/users/jhyun?show=likes");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const UsernameScreen(),
+      ),
+    );
   }
 
   @override
@@ -94,7 +69,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     Gaps.v16,
                     GestureDetector(
-                      onTap: () => _onAppleTap(context),
+                      onTap: () => {},
                       child: const AuthButton(
                         icon: FaIcon(FontAwesomeIcons.apple),
                         text: "Continue with Apple",

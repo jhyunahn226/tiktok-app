@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/onboarding/interests_screen.dart';
@@ -31,13 +32,8 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
   }
 
   void _onNextTap() {
-    //StatefulWidget 내에서는 context를 전역적으로 사용할 수 있으므로, 파라미터로 받지 않아도 됨!
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => const InterestsScreen(),
-      ),
-      (route) => false,
-    );
+    //화면 스택을 모두 제거하고 push
+    context.pushReplacementNamed(InterestsScreen.routeName);
   }
 
   void _setTextFieldDate(DateTime date) {
