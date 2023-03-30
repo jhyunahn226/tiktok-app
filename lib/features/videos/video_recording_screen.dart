@@ -163,7 +163,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   void dispose() {
     _buttonAnimationController.dispose();
     _progressAnimationController.dispose();
-    _cameraController.dispose();
+    if (!_noCamera) {
+      _cameraController.dispose();
+    }
     super.dispose();
   }
 
@@ -176,6 +178,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     //따라서 아래의 코드가 없다면,
     //앱을 처음 실행하자마자 권한요청창이 뜨고, (state == AppLifecycleState.inactive)
     //_cameraController.dispose()를 하려고 하겠지만 _cameraController는 아직 정의되지 않은 상태라서 에러 발생함
+    if (!_noCamera) return;
     if (!_hasPermission) return;
     if (!_cameraController.value.isInitialized) return;
     if (state == AppLifecycleState.inactive) {
@@ -210,6 +213,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                 children: [
                   if (!_noCamera && _cameraController.value.isInitialized)
                     CameraPreview(_cameraController),
+                  const Positioned(
+                    top: Sizes.size40,
+                    left: Sizes.size20,
+                    child: CloseButton(
+                      color: Colors.white,
+                    ),
+                  ),
                   if (!_noCamera)
                     Positioned(
                       top: Sizes.size20,
