@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tiktok/common/widgets/video_configuration/video_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/repos/playback_config_repo.dart';
+import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 import 'package:tiktok/router.dart';
 
 void main() async {
@@ -12,7 +14,20 @@ void main() async {
 
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle.dark); //상태바 아이콘 색상 변경
-  runApp(const TikTokApp());
+
+  final preferences = await SharedPreferences.getInstance();
+  final repository = PlaybackConfigRepository(preferences);
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => PlaybackConfigViewModel(repository),
+        ),
+      ],
+      child: const TikTokApp(),
+    ),
+  );
 }
 
 class TikTokApp extends StatelessWidget {
@@ -20,85 +35,78 @@ class TikTokApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => VideoConfig(),
+    return MaterialApp.router(
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+      title: 'TikTok',
+      themeMode: ThemeMode.system,
+      // FlexColorScheme 패키지를 활용하면 ThemeData에 편하게 활용할 수 있음!
+      // https://pub.dev/packages/flex_color_scheme
+      theme: ThemeData(
+        useMaterial3: true,
+        primaryColor: const Color(0xFFE9435A),
+        scaffoldBackgroundColor: Colors.white,
+        brightness: Brightness.light,
+        textTheme: Typography.blackMountainView,
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color(0xFFE9435A),
         ),
-      ],
-      child: MaterialApp.router(
-        routerConfig: router,
-        debugShowCheckedModeBanner: false,
-        title: 'TikTok',
-        themeMode: ThemeMode.system,
-        // FlexColorScheme 패키지를 활용하면 ThemeData에 편하게 활용할 수 있음!
-        // https://pub.dev/packages/flex_color_scheme
-        theme: ThemeData(
-          useMaterial3: true,
-          primaryColor: const Color(0xFFE9435A),
-          scaffoldBackgroundColor: Colors.white,
-          brightness: Brightness.light,
-          textTheme: Typography.blackMountainView,
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: Color(0xFFE9435A),
-          ),
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          appBarTheme: const AppBarTheme(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
-            elevation: 0,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: Sizes.size18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          bottomAppBarTheme: BottomAppBarTheme(
-            color: Colors.grey.shade50,
-          ),
-          tabBarTheme: TabBarTheme(
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey.shade500,
-            indicatorColor: Colors.black,
-          ),
-          listTileTheme: const ListTileThemeData(
-            iconColor: Colors.black,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        appBarTheme: const AppBarTheme(
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          elevation: 0,
+          titleTextStyle: TextStyle(
+            color: Colors.black,
+            fontSize: Sizes.size18,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        darkTheme: ThemeData(
-          useMaterial3: true,
-          primaryColor: const Color(0xFFE9435A),
-          brightness: Brightness.dark,
-          scaffoldBackgroundColor: Colors.black,
-          textTheme: Typography.whiteMountainView,
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: Color(0xFFE9435A),
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: Colors.grey.shade50,
+        ),
+        tabBarTheme: TabBarTheme(
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.grey.shade500,
+          indicatorColor: Colors.black,
+        ),
+        listTileTheme: const ListTileThemeData(
+          iconColor: Colors.black,
+        ),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        primaryColor: const Color(0xFFE9435A),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        textTheme: Typography.whiteMountainView,
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color(0xFFE9435A),
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey.shade900,
+          surfaceTintColor: Colors.grey.shade900,
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: Sizes.size18,
+            fontWeight: FontWeight.w600,
           ),
-          appBarTheme: AppBarTheme(
-            backgroundColor: Colors.grey.shade900,
-            surfaceTintColor: Colors.grey.shade900,
-            titleTextStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: Sizes.size18,
-              fontWeight: FontWeight.w600,
-            ),
-            actionsIconTheme: IconThemeData(
-              color: Colors.grey.shade100,
-            ),
+          actionsIconTheme: IconThemeData(
+            color: Colors.grey.shade100,
           ),
-          bottomAppBarTheme: BottomAppBarTheme(
-            color: Colors.grey.shade900,
-          ),
-          tabBarTheme: TabBarTheme(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.grey.shade700,
-            indicatorColor: Colors.white,
-          ),
-          listTileTheme: const ListTileThemeData(
-            iconColor: Colors.white,
-          ),
+        ),
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: Colors.grey.shade900,
+        ),
+        tabBarTheme: TabBarTheme(
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.grey.shade700,
+          indicatorColor: Colors.white,
+        ),
+        listTileTheme: const ListTileThemeData(
+          iconColor: Colors.white,
         ),
       ),
     );
