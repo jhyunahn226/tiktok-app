@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tiktok/common/widgets/video_configuration/video_config.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 import 'package:tiktok/features/videos/views/widgets/video_button.dart';
 import 'package:tiktok/features/videos/views/widgets/video_comments.dart';
 import 'package:video_player/video_player.dart';
@@ -28,7 +28,8 @@ class _VideoPostState extends State<VideoPost>
     with SingleTickerProviderStateMixin {
   late VideoPlayerController _videoPlayerController;
 
-  bool _isPaused = false;
+  late bool _isMuted = context.read<PlaybackConfigViewModel>().muted;
+  late bool _isPaused = !context.read<PlaybackConfigViewModel>().autoplay;
 
   final Duration _animationDuration = const Duration(milliseconds: 200);
   late final AnimationController _animationController;
@@ -65,6 +66,10 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuration,
     );
+
+    context
+        .read<PlaybackConfigViewModel>()
+        .addListener(_onPlaybackConfigChanged);
   }
 
   @override
@@ -73,13 +78,30 @@ class _VideoPostState extends State<VideoPost>
     super.dispose();
   }
 
+  void _onPlaybackConfigChanged() {
+    if (!mounted) return; //Widget트리에서 제거된 상태라면 아무것도 안함
+    _isMuted = context.read<PlaybackConfigViewModel>().muted;
+    if (_isMuted) {
+      _videoPlayerController.setVolume(0);
+    } else {
+      _videoPlayerController.setVolume(1);
+    }
+    setState(() {});
+  }
+
   void _onVisibilityChanged(VisibilityInfo info) {
-    // print('Video #${widget.index} is ${info.visibleFraction * 100}% visible');
     if (!mounted) return; //Widget트리에서 제거된 상태라면 아무것도 안함
     if (info.visibleFraction == 1 && //VisibilityDetector위젯이 100% 보는 상태가 되면
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
-      _videoPlayerController.play();
+      final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
+      if (autoplay) {
+        _videoPlayerController.play();
+        _isPaused = false;
+      } else {
+        _videoPlayerController.pause();
+        _isPaused = true;
+      }
     }
     if (_videoPlayerController.value.isPlaying && info.visibleFraction == 0) {
       _onTogglePause();
@@ -90,16 +112,23 @@ class _VideoPostState extends State<VideoPost>
     if (_videoPlayerController.value.isPlaying) {
       _videoPlayerController.pause();
       _animationController.reverse(); //1.0 -> 1.5
-      setState(() {
-        _isPaused = true;
-      });
+      _isPaused = true;
     } else {
       _videoPlayerController.play();
       _animationController.forward(); //1.5 -> 1.0
-      setState(() {
-        _isPaused = false;
-      });
+      _isPaused = false;
     }
+    setState(() {});
+  }
+
+  void _onToggleMute() {
+    _isMuted = !_isMuted;
+    if (_isMuted) {
+      _videoPlayerController.setVolume(0);
+    } else {
+      _videoPlayerController.setVolume(1);
+    }
+    setState(() {});
   }
 
   void _onCommentsTap() async {
@@ -167,13 +196,13 @@ class _VideoPostState extends State<VideoPost>
             left: 20,
             top: 40,
             child: IconButton(
-              icon: const FaIcon(
-                false
+              icon: FaIcon(
+                _isMuted
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
-              onPressed: () {},
+              onPressed: _onToggleMute,
             ),
           ),
           Positioned(
