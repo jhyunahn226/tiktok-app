@@ -29,51 +29,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: ListView(
         children: [
-          CupertinoSwitch(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
-          ),
-          Switch(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
-          ),
-          Switch.adaptive(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
-          ),
-          SwitchListTile(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
-            title: const Text(
-              'Enable notifications',
-            ),
-            subtitle: const Text(
-              'Enable notifications',
-            ),
-          ),
           SwitchListTile.adaptive(
             value: _notifications,
             onChanged: _onNotificationsChanged,
-            title: const Text(
-              'Enable notifications',
-            ),
-            subtitle: const Text(
-              'Enable notifications',
-            ),
-          ),
-          Checkbox(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
+            title: const Text("Enable notifications"),
+            subtitle: const Text("They will be cute"),
           ),
           CheckboxListTile(
             value: _notifications,
             onChanged: _onNotificationsChanged,
-            title: const Text(
-              'Enable notifications',
-            ),
-            subtitle: const Text(
-              'Enable notifications',
-            ),
+            title: const Text("Marketing emails"),
+            subtitle: const Text("We won't spam you"),
             checkColor: Colors.white,
             activeColor: Colors.black,
           ),
@@ -86,11 +52,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 lastDate: DateTime(2030),
               );
               print(date);
+              if (!mounted) return;
               final time = await showTimePicker(
                 context: context,
                 initialTime: TimeOfDay.now(),
               );
               print(time);
+              if (!mounted) return;
               final booking = await showDateRangePicker(
                 context: context,
                 firstDate: DateTime(1980),
@@ -109,11 +77,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
               print(booking);
             },
-            title: const Text(
-              'What is your birthday?',
-            ),
+            title: const Text("What is your birthday?"),
+            subtitle: const Text("I need to know!"),
           ),
-          const AboutListTile(), //위의 ListTile과 완전히 동일
+
           ListTile(
             title: const Text('Log out (iOS)'),
             textColor: Colors.red,
@@ -187,6 +154,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
+          const AboutListTile(
+            applicationVersion: "1.0",
+            applicationLegalese: "Don't copy me.",
+          ), //위의 ListTile과 완전히 동일
         ],
       ),
     );
