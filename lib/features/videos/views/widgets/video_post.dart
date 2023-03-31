@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 import 'package:tiktok/features/videos/views/widgets/video_button.dart';
 import 'package:tiktok/features/videos/views/widgets/video_comments.dart';
 import 'package:video_player/video_player.dart';
@@ -28,8 +26,8 @@ class _VideoPostState extends State<VideoPost>
     with SingleTickerProviderStateMixin {
   late VideoPlayerController _videoPlayerController;
 
-  late bool _isMuted = context.read<PlaybackConfigViewModel>().muted;
-  late bool _isPaused = !context.read<PlaybackConfigViewModel>().autoplay;
+  late bool _isMuted = true;
+  late bool _isPaused = true;
 
   final Duration _animationDuration = const Duration(milliseconds: 200);
   late final AnimationController _animationController;
@@ -66,10 +64,6 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuration,
     );
-
-    context
-        .read<PlaybackConfigViewModel>()
-        .addListener(_onPlaybackConfigChanged);
   }
 
   @override
@@ -80,7 +74,7 @@ class _VideoPostState extends State<VideoPost>
 
   void _onPlaybackConfigChanged() {
     if (!mounted) return; //Widget트리에서 제거된 상태라면 아무것도 안함
-    _isMuted = context.read<PlaybackConfigViewModel>().muted;
+    _isMuted = true;
     if (_isMuted) {
       _videoPlayerController.setVolume(0);
     } else {
@@ -94,8 +88,8 @@ class _VideoPostState extends State<VideoPost>
     if (info.visibleFraction == 1 && //VisibilityDetector위젯이 100% 보는 상태가 되면
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
-      final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
-      if (autoplay) {
+      _isPaused = true;
+      if (!_isPaused) {
         _videoPlayerController.play();
         _isPaused = false;
       } else {
