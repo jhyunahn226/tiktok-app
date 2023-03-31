@@ -1,26 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool _notifications = false;
-
-  void _onNotificationsChanged(bool? newValue) {
-    if (newValue == null) return;
-    setState(() {
-      _notifications = newValue;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -30,26 +18,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           SwitchListTile.adaptive(
-            value: true,
-            onChanged: (value) {},
+            value: ref.watch(playbackConfigProvier).muted,
+            onChanged: (value) =>
+                ref.read(playbackConfigProvier.notifier).setMuted(value),
             title: const Text("Mute Video"),
             subtitle: const Text("Videos will be muted by default."),
           ),
           SwitchListTile.adaptive(
-            value: false,
-            onChanged: (value) {},
+            value: ref.watch(playbackConfigProvier).autoplay,
+            onChanged: (value) =>
+                ref.read(playbackConfigProvier.notifier).setAutoplay(value),
             title: const Text("Auto Play"),
             subtitle: const Text("Videos will start playing automatically."),
           ),
           SwitchListTile.adaptive(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
+            value: false,
+            onChanged: (value) {},
             title: const Text("Enable notifications"),
             subtitle: const Text("They will be cute"),
           ),
           CheckboxListTile(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
+            value: false,
+            onChanged: (value) {},
             title: const Text("Marketing emails"),
             subtitle: const Text("We won't spam you"),
             checkColor: Colors.white,
@@ -63,14 +53,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 firstDate: DateTime(1980),
                 lastDate: DateTime(2030),
               );
-              print(date);
-              if (!mounted) return;
               final time = await showTimePicker(
                 context: context,
                 initialTime: TimeOfDay.now(),
               );
-              print(time);
-              if (!mounted) return;
               final booking = await showDateRangePicker(
                 context: context,
                 firstDate: DateTime(1980),
@@ -87,7 +73,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               );
-              print(booking);
             },
             title: const Text("What is your birthday?"),
             subtitle: const Text("I need to know!"),

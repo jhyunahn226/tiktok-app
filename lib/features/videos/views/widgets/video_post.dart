@@ -1,14 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 import 'package:tiktok/features/videos/views/widgets/video_button.dart';
 import 'package:tiktok/features/videos/views/widgets/video_comments.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class VideoPost extends StatefulWidget {
+class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
   final int index;
 
@@ -19,15 +21,15 @@ class VideoPost extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<VideoPost> createState() => _VideoPostState();
+  VideoPostState createState() => VideoPostState();
 }
 
-class _VideoPostState extends State<VideoPost>
+class VideoPostState extends ConsumerState<VideoPost>
     with SingleTickerProviderStateMixin {
   late VideoPlayerController _videoPlayerController;
 
-  late bool _isMuted = true;
-  late bool _isPaused = true;
+  late bool _isMuted = ref.read(playbackConfigProvier).muted;
+  late bool _isPlay = ref.read(playbackConfigProvier).autoplay;
 
   final Duration _animationDuration = const Duration(milliseconds: 200);
   late final AnimationController _animationController;
@@ -46,6 +48,11 @@ class _VideoPostState extends State<VideoPost>
         VideoPlayerController.asset('assets/videos/video.mp4');
     await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true);
+    if (_isMuted) {
+      await _videoPlayerController.setVolume(0);
+    } else {
+      await _videoPlayerController.setVolume(1);
+    }
     if (kIsWeb) {
       await _videoPlayerController.setVolume(0); //웹에서는 볼륨이 0이어야 autoplay를 지원함
     }
@@ -74,7 +81,7 @@ class _VideoPostState extends State<VideoPost>
 
   void _onPlaybackConfigChanged() {
     if (!mounted) return; //Widget트리에서 제거된 상태라면 아무것도 안함
-    _isMuted = true;
+    _isMuted = ref.read(playbackConfigProvier).muted;
     if (_isMuted) {
       _videoPlayerController.setVolume(0);
     } else {
@@ -85,16 +92,15 @@ class _VideoPostState extends State<VideoPost>
 
   void _onVisibilityChanged(VisibilityInfo info) {
     if (!mounted) return; //Widget트리에서 제거된 상태라면 아무것도 안함
-    if (info.visibleFraction == 1 && //VisibilityDetector위젯이 100% 보는 상태가 되면
-        !_isPaused &&
-        !_videoPlayerController.value.isPlaying) {
-      _isPaused = true;
-      if (!_isPaused) {
+    if (info.visibleFraction == 1) {
+      //VisibilityDetector위젯이 100% 보는 상태가 되면
+      _isPlay = ref.read(playbackConfigProvier).autoplay;
+      if (_isPlay) {
         _videoPlayerController.play();
-        _isPaused = false;
+        _isPlay = true;
       } else {
         _videoPlayerController.pause();
-        _isPaused = true;
+        _isPlay = false;
       }
     }
     if (_videoPlayerController.value.isPlaying && info.visibleFraction == 0) {
@@ -106,11 +112,11 @@ class _VideoPostState extends State<VideoPost>
     if (_videoPlayerController.value.isPlaying) {
       _videoPlayerController.pause();
       _animationController.reverse(); //1.0 -> 1.5
-      _isPaused = true;
+      _isPlay = false;
     } else {
       _videoPlayerController.play();
       _animationController.forward(); //1.5 -> 1.0
-      _isPaused = false;
+      _isPlay = true;
     }
     setState(() {});
   }
@@ -172,7 +178,7 @@ class _VideoPostState extends State<VideoPost>
                     return Transform.scale(
                       scale: _animationController.value,
                       child: AnimatedOpacity(
-                        opacity: _isPaused ? 1 : 0,
+                        opacity: !_isPlay ? 1 : 0,
                         duration: _animationDuration,
                         child: const FaIcon(
                           FontAwesomeIcons.play,
