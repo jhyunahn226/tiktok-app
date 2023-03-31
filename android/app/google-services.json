@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "499223119289",
+    "project_id": "tiktok-flutter-beem",
+    "storage_bucket": "tiktok-flutter-beem.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499223119289:android:f2cd3eaacaf230920e6268",
+        "android_client_info": {
+          "package_name": "com.example.tiktok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499223119289-82a7a6msfikfm4bhaq1daqobo8nev0ct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4uIZ2wpI7q4TO6oUnW0CxrgNl-b0ozn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499223119289-82a7a6msfikfm4bhaq1daqobo8nev0ct.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "499223119289-d9136osvq6o5n30b4dq3uhmnnbdqq2ie.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tiktok"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
