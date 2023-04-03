@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/onboarding/interests_screen.dart';
+import 'package:tiktok/features/authentication/view_models/signup_view_model.dart';
 
 import 'widgets/form_button.dart';
 
-class BirthdayScreen extends StatefulWidget {
+class BirthdayScreen extends ConsumerStatefulWidget {
   const BirthdayScreen({super.key});
 
   @override
-  State<BirthdayScreen> createState() => _BirthdayScreenState();
+  ConsumerState<BirthdayScreen> createState() => _BirthdayScreenState();
 }
 
-class _BirthdayScreenState extends State<BirthdayScreen> {
+class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
   final TextEditingController _birthdayController = TextEditingController();
 
   DateTime initialDate = DateTime.now();
@@ -32,7 +32,8 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
   }
 
   void _onNextTap() {
-    context.goNamed(InterestsScreen.routeName);
+    // context.goNamed(InterestsScreen.routeName);
+    ref.read(signUpProvider.notifier).signUp();
   }
 
   void _setTextFieldDate(DateTime date) {
@@ -92,20 +93,18 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
             Gaps.v16,
             GestureDetector(
               onTap: _onNextTap,
-              child: const FormButton(disabled: false),
+              child: FormButton(disabled: ref.watch(signUpProvider).isLoading),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: SizedBox(
-          height: 300,
-          child: CupertinoDatePicker(
-            onDateTimeChanged: _setTextFieldDate,
-            mode: CupertinoDatePickerMode.date,
-            maximumDate: initialDate,
-            initialDateTime: initialDate,
-          ),
+      bottomNavigationBar: SizedBox(
+        height: 300,
+        child: CupertinoDatePicker(
+          onDateTimeChanged: _setTextFieldDate,
+          mode: CupertinoDatePickerMode.date,
+          maximumDate: initialDate,
+          initialDateTime: initialDate,
         ),
       ),
     );
