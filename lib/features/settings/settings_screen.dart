@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tiktok/features/authentication/sign_up_screen.dart';
+import 'package:tiktok/features/authentication/view_models/signup_view_model.dart';
 import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -93,7 +96,10 @@ class SettingsScreen extends ConsumerWidget {
                       child: const Text("No"),
                     ),
                     CupertinoDialogAction(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        ref.read(signUpProvider.notifier).signOut();
+                        context.goNamed(SignUpScreen.routeName);
+                      },
                       isDestructiveAction: true,
                       child: const Text("Yes"),
                     ),

@@ -14,11 +14,15 @@ class SignUpViewModel extends AsyncNotifier<void> {
     final form = ref.read(signUpForm);
 
     state = await AsyncValue.guard(
-      () async => _authRepo.signUp(
+      () async => _authRepo.emailSignUp(
         form["email"],
         form["password"],
       ),
     );
+  }
+
+  Future<void> signOut() async {
+    state = await AsyncValue.guard(() async => _authRepo.signOut());
   }
 }
 
