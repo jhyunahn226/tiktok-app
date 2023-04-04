@@ -25,7 +25,11 @@ class SignUpViewModel extends AsyncNotifier<void> {
           form["email"],
           form["password"],
         ); //Firebase Auth로 유저 생성
-        await users.createProfile(userCredential); //Firestore에 프로필 업데이트
+        await users.createProfile(
+          userCredential,
+          form["username"],
+          form["birthday"],
+        ); //Firestore에 프로필 업데이트
       },
     );
 

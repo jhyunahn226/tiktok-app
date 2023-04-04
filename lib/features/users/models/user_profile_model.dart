@@ -1,14 +1,16 @@
 class UserProfileModel {
   final String uid;
   final String email;
-  final String name;
+  final String username;
+  final DateTime birthday;
   final String bio;
   final String link;
 
   UserProfileModel({
     required this.uid,
     required this.email,
-    required this.name,
+    required this.username,
+    required this.birthday,
     required this.bio,
     required this.link,
   });
@@ -16,15 +18,17 @@ class UserProfileModel {
   UserProfileModel.empty()
       : uid = "",
         email = "",
-        name = "",
+        username = "",
+        birthday = DateTime.now(),
         bio = "",
         link = "";
 
-  Map<String, String> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       "uid": uid,
       "email": email,
-      "name": name,
+      "name": username,
+      "birthday": birthday,
       "bio": bio,
       "link": link,
     };
