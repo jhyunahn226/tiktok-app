@@ -42,11 +42,18 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
       birthday: birthday,
       bio: "undefined",
       link: "undefined",
+      hasAvatar: false,
     );
 
     await _userRepository.createProfile(profile);
 
     state = AsyncValue.data(profile);
+  }
+
+  Future<void> onAvatarUpload() async {
+    if (state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(hasAvatar: true));
+    await _userRepository.updateUser(state.value!.uid, {"hasAvatar": true});
   }
 }
 

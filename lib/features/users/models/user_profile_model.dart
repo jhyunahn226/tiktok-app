@@ -5,6 +5,7 @@ class UserProfileModel {
   final DateTime birthday;
   final String bio;
   final String link;
+  final bool hasAvatar;
 
   UserProfileModel({
     required this.uid,
@@ -13,6 +14,7 @@ class UserProfileModel {
     required this.birthday,
     required this.bio,
     required this.link,
+    required this.hasAvatar,
   });
 
   UserProfileModel.empty()
@@ -21,15 +23,17 @@ class UserProfileModel {
         username = "",
         birthday = DateTime.now(),
         bio = "",
-        link = "";
+        link = "",
+        hasAvatar = false;
 
   UserProfileModel.fromJson(Map<String, dynamic> json)
-      : uid = "",
+      : uid = json["uid"],
         email = json["email"],
         username = json["username"],
         birthday = json["birthday"].toDate(),
         bio = json["bio"],
-        link = json["link"];
+        link = json["link"],
+        hasAvatar = json["hasAvatar"];
 
   Map<String, dynamic> toJson() {
     return {
@@ -39,6 +43,27 @@ class UserProfileModel {
       "birthday": birthday,
       "bio": bio,
       "link": link,
+      "hasAvatar": false,
     };
+  }
+
+  UserProfileModel copyWith({
+    String? uid,
+    String? email,
+    String? username,
+    DateTime? birthday,
+    String? bio,
+    String? link,
+    bool? hasAvatar,
+  }) {
+    return UserProfileModel(
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      birthday: birthday ?? this.birthday,
+      bio: bio ?? this.bio,
+      link: link ?? this.link,
+      hasAvatar: hasAvatar ?? this.hasAvatar,
+    );
   }
 }
