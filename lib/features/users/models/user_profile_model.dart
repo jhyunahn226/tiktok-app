@@ -27,7 +27,7 @@ class UserProfileModel {
       : uid = "",
         email = json["email"],
         username = json["username"],
-        birthday = json["birthday"],
+        birthday = json["birthday"].toDate(),
         bio = json["bio"],
         link = json["link"];
 
@@ -35,7 +35,7 @@ class UserProfileModel {
     return {
       "uid": uid,
       "email": email,
-      "name": username,
+      "username": username,
       "birthday": birthday,
       "bio": bio,
       "link": link,
